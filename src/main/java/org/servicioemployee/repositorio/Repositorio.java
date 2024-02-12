@@ -37,7 +37,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
 
     private WebClient webClientContract;
-    private WebClient webClientLearning;
+   // private WebClient webClientLearning;
     private WebClient webClientCompensation;
 
 
@@ -48,9 +48,9 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
         this.webClientContract = WebClient.create(vertx ,
                 new WebClientOptions().setDefaultHost("localhost")
                         .setDefaultPort(8087).setSsl(false).setTrustAll(true));
-        this.webClientLearning = WebClient.create(vertx ,
-                new WebClientOptions().setDefaultHost("localhost")
-                        .setDefaultPort(8086).setSsl(false).setTrustAll(true));
+     //   this.webClientLearning = WebClient.create(vertx ,
+       //         new WebClientOptions().setDefaultHost("localhost")
+         //               .setDefaultPort(8086).setSsl(false).setTrustAll(true));
         this.webClientCompensation = WebClient.create(vertx ,
                 new WebClientOptions().setDefaultHost("localhost")
                         .setDefaultPort(8088).setSsl(false).setTrustAll(true));
@@ -79,6 +79,14 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                     return lista;
                 });
     }
+
+    //  Contrato por id de Empleado
+
+    //  Contrato por id de Empleado  y filtrar fecha
+
+    //  Contrato  => Cantidad de empleados por tipo
+
+
 
 // devuelve todas las compensaciones
 
@@ -174,6 +182,9 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                     });
     }
 
+    public Uni<List<Employee>> getAllManager(){
+        return find("isManager=1?" , true ).list();
+    }
 
     //LISTA DE TODAS LAS COMPENSACIONES
 

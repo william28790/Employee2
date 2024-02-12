@@ -45,11 +45,18 @@ public class EmployeeApi {
     }
 
 //devuelve los empleados que son manager con su contrato
+   // @GET
+   // @Path("/manager/employees")
+   // public  Uni<List<Employee>> getEmployeeIsManager(){
+      //  return er.getEmployeeIsManager();
+   // }
+
     @GET
-    @Path("/manager/employees")
+    @Path("/allManager/sinParametros")
     public  Uni<List<Employee>> getEmployeeIsManager(){
-        return er.getEmployeeIsManager();
+        return er.getAllManager();
     }
+
 
     @GET
     @Path("/{idManager}/employees")
