@@ -183,7 +183,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
     }
 
     public Uni<List<Employee>> getAllManager(){
-        return find("isManager=1?" , true ).list();
+        return find("isManager=?1" , true ).list();
     }
 
     //LISTA DE TODAS LAS COMPENSACIONES
