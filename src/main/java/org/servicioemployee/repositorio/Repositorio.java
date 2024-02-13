@@ -289,7 +289,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
 
     public Uni<List<PanacheEntityBase>> empleadosPorManager(){
-        String query= "select e.id as Id, e.legalName as Manager ,count(distinct em.id) as Cantidad" +
+        String query= "select e.id as Id, e.legalName as Manager,count(distinct em.id) as Cantidad " +
                       "from Employee e , Employee em " +
                       "where e.isManager = true " +
                        "and e.id = em.managerId " +
