@@ -4,6 +4,7 @@ package org.servicioemployee.repositorio;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
 
 import io.smallrye.mutiny.Uni;
@@ -11,9 +12,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,6 @@ import jakarta.inject.Inject;
 import org.servicioemployee.entites.*;
 
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -281,6 +278,8 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 });
     }
 
+
+    // ESTE SE VA
     //se le pasa por parametro el id del manager y devuelve la cantidad de empleados a cargo
 @QueryParam("idManager")
     public Uni<Long> managerYCantEmpleados(Long idManager) {
@@ -289,6 +288,15 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
 
 
+    public Uni<List<PanacheEntityBase>> empleadosPorManager(){
+        String query= "select e.id as Id, e.legalName as Manager ,count(distinct em.id) as Cantidad" +
+                      "from Employee e , Employee em " +
+                      "where e.isManager = true " +
+                       "and e.id = em.managerId " +
+                       "group by e.id ,e.legalName ";
+
+        return Employee.find(query).list();
+    }
     
 
 }
