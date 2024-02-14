@@ -98,9 +98,26 @@ public class EmployeeApi {
         //return Response.ok().build();
     }
 
+
     @GET
     @Path("empleadosPorManager")
     public Uni<List<PanacheEntityBase>> empleadosPorManager(){
         return er.empleadosPorManager();
     }
+
+
+      /*
+    @GET
+    @Path("empleadosPorManagerConsumoContract")
+    public Uni<List<PanacheEntityBase>> empleadosPorManagerConsumoContract(){
+        return er.empleadosPorManagerConsumoContract();
+    }
+*/
+
+
+
+//Fin
 }
+
+
+
