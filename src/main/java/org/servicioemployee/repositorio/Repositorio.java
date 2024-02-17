@@ -285,7 +285,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
         return find("managerId=?1", idManager).count();
     }
 
-
+//Grafica empleados por managar
     public Uni<List<PanacheEntityBase>> empleadosPorManager() {
         // Primero obtenemos los IDs de empleados activos desde el microservicio 'Contract'
         return listadoDeEmployeeIdMasRecienteActivo().onItem().transformToUni(idsActivos -> {
@@ -330,6 +330,13 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                     return lista;
                 });
     }
+
+    public Uni<List<PanacheEntityBase>> empleadosDeUnManagerPorIdMasRecientes(Long managerId) {
+        return Employee.find("select id, employeeId, email, fullName, max(fechaCarga) " +
+                "from Employee where managerId = ?1 group by id, employeeId, email, fullName " +
+                "order by id asc", managerId).list();
+    }
+
 
 
 

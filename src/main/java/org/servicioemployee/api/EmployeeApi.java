@@ -106,6 +106,13 @@ public class EmployeeApi {
     }
 
 
+    @GET
+    @Path("/{idManager}/EmpleadosPorManagerID")
+    public Uni<List<PanacheEntityBase>> empleadosDeUnManagerPorIdMasRecientes(@PathParam("idManager")Long idManager){
+        return er.empleadosDeUnManagerPorIdMasRecientes(idManager);
+    }
+
+
       /*
     @GET
     @Path("empleadosPorManagerConsumoContract")
