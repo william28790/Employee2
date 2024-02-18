@@ -10,6 +10,7 @@ import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
@@ -23,9 +24,7 @@ import jakarta.inject.Inject;
 import org.servicioemployee.entites.*;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -109,6 +108,8 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                     return lista;
                 });
     }
+
+
 
 
     private Uni<List<Compensation>> getListCompensation() {
@@ -286,6 +287,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
     }
 
 //Grafica empleados por managar
+
     public Uni<List<PanacheEntityBase>> empleadosPorManager() {
         // Primero obtenemos los IDs de empleados activos desde el microservicio 'Contract'
         return listadoDeEmployeeIdMasRecienteActivo().onItem().transformToUni(idsActivos -> {
@@ -331,7 +333,9 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 });
     }
 
-    public Uni<List<PanacheEntityBase>> empleadosDeUnManagerPorIdMasRecientes(Long managerId) {
+
+    // Para la tabla que se abre con el clic en la grafica
+    public Uni<List<Employee>> empleadosDeUnManagerPorIdMasRecientes(Long managerId) {
         return Employee.find("select id, employeeId, email, fullName, max(fechaCarga) " +
                 "from Employee where managerId = ?1 group by id, employeeId, email, fullName " +
                 "order by id asc", managerId).list();
@@ -340,7 +344,327 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
 
 
-    /*
+
+
+    // CAMBIAR A PRIVADO
+    public Uni<Contract> datosParaEmpleadosActivosPorManager(Long employeeId) {
+        String url= "/contract/"+employeeId+"/datosParaEmpleadosActivosPorManager";
+        return webClientContract.get(8087, "localhost",url ).send()
+                .onFailure().invoke(res -> log.error("Error al recuperar los contract ", res))
+                .onItem().transform(res -> {
+                   // List<Contract> lista = new ArrayList<>();
+                    JsonObject objects = res.bodyAsJsonObject();
+                    //objects.forEach(p -> {
+                  //      log.info("See Objects: " + objects);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        // Pass JSON string and the POJO class
+                        Contract con = null;
+                        try {
+                            con = objectMapper.readValue(objects.toString(), Contract.class);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                    //    lista.add(con);
+                    //});
+                    return con;
+                });
+    }
+
+
+
+
+
+    public Uni<List<Contract>> datosParaEmpleadosActivosPorManager2() {
+        String url= "/contract/datosParaEmpleadosActivosPorManager2";
+        return webClientContract.get(8087, "localhost",url ).send()
+                .onFailure().invoke(res -> log.error("Error al recuperar los contract ", res))
+                .onItem().transform(res -> {
+                    List<Contract> lista = new ArrayList<>();
+                    //JsonObject objects = res.bodyAsJsonObject();
+                    JsonArray objects = res.bodyAsJsonArray();
+                    objects.forEach(p -> {
+                         log.info("See Objects: " + objects);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    // Pass JSON string and the POJO class
+                    Contract con = null;
+                    try {
+                        con = objectMapper.readValue(p.toString(), Contract.class);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                        lista.add(con);
+                    });
+                    return lista;
+                });
+    }
+// CAMBIAR A PRIVADO
+    public Uni<Compensation> datosDeCompensacionesParaEmpleadosActivosPorManager(Long homeCNUM) {
+        String url= "/compensation/"+homeCNUM+"/datosDeCompensacionesParaEmpleadosActivosPorManager";
+        return webClientCompensation.get(8088, "localhost",url ).send()
+                .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
+                .onItem().transform(res -> {
+                    Compensation com = null;
+                    //List<Compensation> lista = new ArrayList<>();
+                    //JsonArray objects = res.bodyAsJsonArray();
+                    JsonObject objects = res.bodyAsJsonObject();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Compensation comAux = null;
+
+                    try {
+                        com = objectMapper.readValue(objects.toString(), Compensation.class);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+
+                  //  objects.forEach(p -> {
+                  //      log.info("See Objects: " + objects);
+                        //ObjectMapper objectMapper = new ObjectMapper();
+                        //Compensation comAux = null;
+                     //   try {
+                      //      com = objectMapper.readValue(p.toString(), Compensation.class);
+                       // } catch (JsonProcessingException e) {
+                       //     e.printStackTrace();
+                       // }
+                      //  return comAux;
+                       // lista.add(com);
+                   // });
+                    return com;
+                });
+    }
+
+
+
+    public Uni<List<Compensation>> datosDeCompensacionesParaEmpleadosActivosPorManager2() {
+        String url= "/compensation/datosDeCompensacionesParaEmpleadosActivosPorManager2";
+        return webClientCompensation.get(8088, "localhost",url ).send()
+                .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
+                .onItem().transform(res -> {
+                    //Compensation com = null;
+                    List<Compensation> lista = new ArrayList<>();
+                    JsonArray objects = res.bodyAsJsonArray();
+                    //JsonObject objects = res.bodyAsJsonObject();
+                   // ObjectMapper objectMapper = new ObjectMapper();
+                    //Compensation comAux = null;
+
+                   // try {
+                   //     com = objectMapper.readValue(objects.toString(), Compensation.class);
+                   /// } catch (JsonProcessingException e) {
+                   //     e.printStackTrace();
+                   // }
+
+
+                     objects.forEach(p -> {
+                         log.info("See Objects: " + objects);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Compensation com = null;
+                       try {
+                          com = objectMapper.readValue(p.toString(), Compensation.class);
+                     } catch (JsonProcessingException e) {
+                         e.printStackTrace();
+                     }
+                     //return comAux;
+                    lista.add(com);
+                     });
+                    return lista;
+                });
+    }
+
+
+    public Uni<List<Employee>> datosDeEmpleadosDeUnManagerPorId(Long idManager){
+        Uni<List<Employee>> listaEmpleados = empleadosDeUnManagerPorIdMasRecientes2(idManager);
+
+
+        return  listaEmpleados.onItem().transform(lista -> {
+           List<Employee> listaRetorno=new ArrayList<>();
+
+            for (Employee e : lista){
+                Compensation com= (Compensation) datosDeCompensacionesParaEmpleadosActivosPorManager(e.getId());
+                Contract con = (Contract) datosParaEmpleadosActivosPorManager(e.getId());
+
+                e.setContract(con);
+                e.setCompensation(com);
+                listaRetorno.add(e);
+            }
+
+            return listaRetorno;
+        });
+    }
+
+
+    public Uni<List<Employee>> empleadosDeUnManagerPorIdMasRecientes2(Long managerId) {
+        return Employee.find("select e1 " +
+                "from Employee e1 " +
+                "where e1.managerId = ?1 " +
+                "and e1.fechaCarga = (select max(e2.fechaCarga) " +
+                "from Employee e2 " +
+                "where e2.id = e1.id) " +
+                "order by e1.id asc", managerId).list();
+    }
+
+
+
+    public Uni<List<Employee>> datosDeEmpleadosDeUnManagerPorId2(Long managerId) {
+        return Uni.combine().all().unis(empleadosDeUnManagerPorIdMasRecientes2(managerId), datosParaEmpleadosActivosPorManager2(),datosDeCompensacionesParaEmpleadosActivosPorManager2())
+                .combinedWith((v1, v2,v3) -> {
+                    List<Employee> lista = new ArrayList<>();
+                    v1.forEach(e -> {
+                        v2.forEach(con -> {
+                            if (e.getId() == con.getEmployeeId()) {
+                                //si son manager se le setea el contract y se lo agrega a la lista para el retorno
+                                e.setContract(con);
+                            }
+                        });
+
+                        v3.forEach(com ->{
+                            if(e.getId().equals(com.getHomeCNUM())){
+                                e.setCompensation(com);
+                            }
+                        });
+
+                        lista.add(e);
+                    });
+                    return lista;
+                });
+    }
+
+
+
+
+
+
+
+
+
+
+
+/*
+    public Uni<List<Employee>> datosDeEmpleadosDeUnManagerPorId(Long idManager) {
+        return empleadosDeUnManagerPorIdMasRecientes(idManager)
+                .onItem().transformToUni(lista -> {
+                    List<Uni<Employee>> uniEmployeesWithData = new ArrayList<>();
+
+                    for (Employee e : lista) {
+                        Uni<Compensation> uniCompensation = datosDeCompensacionesParaEmpleadosActivosPorManager(e.getId());
+                        Uni<Contract> uniContract = datosParaEmpleadosActivosPorManager(e.getId());
+
+                        uniEmployeesWithData.add(
+                                Uni.combine().all().unis(uniCompensation, uniContract)
+                                        .asTuple()
+                                        .onItem().transform(tuple -> {
+                                            Compensation com = tuple.getItem1();
+                                            Contract con = tuple.getItem2();
+
+                                            if (com != null) {
+                                                e.setCompensation(com);
+                                            }
+                                            if (con != null) {
+                                                e.setContract(con);
+                                            }
+
+                                            return e;
+                                        })
+                        );
+                    }
+
+
+                    return null;
+                } );
+    }*/
+
+
+
+
+
+/*
+    public Uni<List<String>> datosParaEmpleadosActivosPorManager(){
+        return webClientContract.get(8087, "localhost", "/contract/datosParaEmpleadosActivosPorManager").send()
+                .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
+                .onItem().transform(res -> {
+                    List<String> lista = new ArrayList<>();
+                    JsonArray objects = res.bodyAsJsonArray();
+                    objects.forEach(contrato -> {
+                        log.info("See Objects: " + objects);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        // Pass JSON string and the POJO class
+                        Object aux=new Object();
+                        try {
+                            aux = objectMapper.readValue(contrato.toString(), aux.toString());
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                        lista.add(objects.toString());
+                    });
+                    return lista;
+                });
+    }
+*/
+
+/*
+    public Uni<List<Contract>> datosParaEmpleadosActivosPorManager() {
+        return webClientContract
+                .get(8087, "localhost", "/contract/datosParaEmpleadosActivosPorManager")
+                .send()
+                .onFailure().invoke(res -> log.error("Error recuperando contratos ", res))
+                .onItem().transformToUni(res -> {
+                    if (res.statusCode() != 200) {
+                        return Uni.createFrom().failure(new RuntimeException("Failed to fetch data from service"));
+                    }
+                    Buffer body = (Buffer) res.bodyAsBuffer();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    try {
+                        List<Contract> contracts = objectMapper.readValue(body.getBytes(), new TypeReference<List<Contract>>() {});
+                        return Uni.createFrom().item(contracts);
+                    } catch (Exception e) {
+                        return Uni.createFrom().failure(e);
+                    }
+                });
+    }
+
+*/
+
+
+
+
+
+   /*
+    //VA A COMPENSACIONES A BUSCAR LOS DATOS PARA EMPLEADOS POR MANAGER
+    public Uni<List<Map<String, Object>>> datosDeCompensacionesParaEmpleadosActivosPorManager() {
+        return webClientCompensation.get(8088, "localhost", "/compensation/datosParaEmpleadosActivosPorManager").send()
+                .onFailure().invoke(res -> log.error("Error al recuperar compensaciones", res))
+                .onItem().transform(res -> {
+                    List<Map<String, Object>> compensationsList = new ArrayList<>();
+                    JsonArray objects = res.bodyAsJsonArray();
+                    // Iterar sobre el JsonArray de forma segura
+                    for (int i = 0; i < objects.size(); i++) {
+                        JsonObject jsonObject = objects.getJsonObject(i); // Acceso seguro al JsonObject
+                        Map<String, Object> compensation = new HashMap<>();
+                        compensation.put("homeCNUM", jsonObject.getLong("homeCNUM"));
+                        compensation.put("pmr", jsonObject.getString("pmr"));
+                        compensation.put("monthlyReferenceSalary", jsonObject.getDouble("monthlyReferenceSalary"));
+                        compensationsList.add(compensation);
+                    };
+                    return compensationsList;
+                });
+    }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public Uni<List<PanacheEntityBase>> empleadosPorManager() {
         String query = "select e.id as Id, e.legalName as Manager,count(distinct em.id) as Cantidad " +
                 "from Employee e , Employee em " +
@@ -350,7 +674,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
         return Employee.find(query).list();
     }
-    */
+*/
 
 //fin
 }

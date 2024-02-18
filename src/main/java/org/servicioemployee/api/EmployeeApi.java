@@ -4,6 +4,7 @@ import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.smallrye.mutiny.Uni;
 import org.servicioemployee.entites.Compensation;
+import org.servicioemployee.entites.Contract;
 import org.servicioemployee.entites.Employee;
 
 //se cambiaron todos los javax por jakarta
@@ -108,18 +109,31 @@ public class EmployeeApi {
 
     @GET
     @Path("/{idManager}/EmpleadosPorManagerID")
-    public Uni<List<PanacheEntityBase>> empleadosDeUnManagerPorIdMasRecientes(@PathParam("idManager")Long idManager){
-        return er.empleadosDeUnManagerPorIdMasRecientes(idManager);
+    public Uni<List<Employee>> empleadosDeUnManagerPorIdMasRecientes(@PathParam("idManager")Long idManager){
+        return er.empleadosDeUnManagerPorIdMasRecientes2(idManager);
     }
 
 
-      /*
+
     @GET
-    @Path("empleadosPorManagerConsumoContract")
-    public Uni<List<PanacheEntityBase>> empleadosPorManagerConsumoContract(){
-        return er.empleadosPorManagerConsumoContract();
+    @Path("{managerId}/datosDeEmpleadosDeUnManagerPorId2")
+    public Uni<List<Employee>> datosDeEmpleadosDeUnManagerPorId(@PathParam("managerId") Long managerId){
+        return er.datosDeEmpleadosDeUnManagerPorId2(managerId);
     }
-*/
+    ///////////////////////////////////////////////
+    //////////////////////////////////////////////
+    // METODOS DE PRUEBA
+    @GET
+    @Path("{id}/datosParaEmpleadosActivosPorManager")
+    public Uni<Contract> datosParaEmpleadosActivosPorManager(@PathParam("id")Long id){
+        return er.datosParaEmpleadosActivosPorManager(id);
+    }
+
+    @GET
+    @Path("{id}/datosDeCompensacionesParaEmpleadosActivosPorManager")
+    public Uni<Compensation> datosDeCompensacionesParaEmpleadosActivosPorManager(@PathParam("id") Long homeCNUM){
+        return er.datosDeCompensacionesParaEmpleadosActivosPorManager(homeCNUM);
+    }
 
 
 
