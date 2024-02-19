@@ -370,10 +370,6 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 });
     }
 
-
-
-
-
     public Uni<List<Contract>> datosParaEmpleadosActivosPorManager2() {
         String url= "/contract/datosParaEmpleadosActivosPorManager2";
         return webClientContract.get(8087, "localhost",url ).send()
@@ -432,8 +428,6 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                     return com;
                 });
     }
-
-
 
     public Uni<List<Compensation>> datosDeCompensacionesParaEmpleadosActivosPorManager2() {
         String url= "/compensation/datosDeCompensacionesParaEmpleadosActivosPorManager2";
@@ -528,6 +522,15 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 });
     }
 
+    public Uni<Employee> informacionEmployee(Long idEmployee){
+        return Employee.find("select e1 " +
+                "from Employee e1 " +
+                "where e1.id = ?1 " +
+                "and e1.fechaCarga = (select max(e2.fechaCarga) " +
+                "from Employee e2 " +
+                "where e2.id = e1.id) "
+                , idEmployee).firstResult();
+    }
 
 
 

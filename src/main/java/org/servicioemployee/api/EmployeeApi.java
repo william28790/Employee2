@@ -135,6 +135,11 @@ public class EmployeeApi {
         return er.datosDeCompensacionesParaEmpleadosActivosPorManager(homeCNUM);
     }
 
+    @GET
+    @Path("{idEmployee}/informacionEmployee")
+    public Uni<Employee> informacionEmployee(@PathParam("idEmployee")Long idEmployee){
+        return er.informacionEmployee(idEmployee);
+    }
 
 
 //Fin
