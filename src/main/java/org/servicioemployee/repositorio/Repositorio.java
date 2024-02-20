@@ -341,6 +341,10 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 "order by id asc", managerId).list();
     }
 
+    public Uni<List<Employee>> searchAutocomplete() {
+        return Employee.find("select id , fullName from Employee  group by id,fullName ").list();
+    }
+
 
 
 

@@ -146,6 +146,11 @@ public class EmployeeApi {
     public Uni<Employee> buscadorSearchPorFullName(@PathParam("fullName")String fullName){
         return er.buscadorSearchPorFullName(fullName);
     }
+    @GET
+    @Path("searchAutocomplete")
+    public Uni<List<Employee>> searchAutocomplete(){
+        return er.searchAutocomplete();
+    }
 
 //Fin
 }
