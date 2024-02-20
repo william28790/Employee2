@@ -141,6 +141,11 @@ public class EmployeeApi {
         return er.informacionEmployee(idEmployee);
     }
 
+    @GET
+    @Path("{fullName}/buscadorSearchPorFullName")
+    public Uni<Employee> buscadorSearchPorFullName(@PathParam("fullName")String fullName){
+        return er.buscadorSearchPorFullName(fullName);
+    }
 
 //Fin
 }

@@ -532,9 +532,9 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
                 , idEmployee).firstResult();
     }
 
-
-
-
+    public Uni<Employee> buscadorSearchPorFullName(String fullName){
+        return find("fullName=?1", fullName).firstResult();
+    }
 
 
 
