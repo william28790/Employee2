@@ -43,20 +43,20 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
     @PostConstruct
     void initialize() {
         this.webClientContract = WebClient.create(vertx,
-                new WebClientOptions().setDefaultHost("52.23.156.12")
+                new WebClientOptions().setDefaultHost("localhost")
                         .setDefaultPort(8087).setSsl(false).setTrustAll(true));
         //   this.webClientLearning = WebClient.create(vertx ,
         //         new WebClientOptions().setDefaultHost("localhost")
         //               .setDefaultPort(8086).setSsl(false).setTrustAll(true));
         this.webClientCompensation = WebClient.create(vertx,
-                new WebClientOptions().setDefaultHost("52.23.156.12")
+                new WebClientOptions().setDefaultHost("localhost")
                         .setDefaultPort(8088).setSsl(false).setTrustAll(true));
     }
 
 
     // devuelve todos los contratos
     private Uni<List<Contract>> getListContract() {
-        return webClientContract.get(8087, "52.23.156.12", "/contract").send()
+        return webClientContract.get(8087, "localhost", "/contract").send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     List<Contract> lista = new ArrayList<>();
@@ -88,7 +88,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
     //Devuelve los contratos de los manager a traves de el parametro true de la url
     public Uni<List<Contract>> getListContractManager() {
-        return webClientContract.get(8087, "52.23.156.12", "/contract/true/contract").send()
+        return webClientContract.get(8087, "localhost", "/contract/true/contract").send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     List<Contract> lista = new ArrayList<>();
@@ -113,7 +113,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
 
     private Uni<List<Compensation>> getListCompensation() {
-        return webClientCompensation.get(8088, "52.23.156.12", "/compensation").send()
+        return webClientCompensation.get(8088, "localhost", "/compensation").send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     List<Compensation> lista = new ArrayList<>();
@@ -136,7 +136,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
     public Uni<Compensation> getCompensationXid(Long idEmployee) {
         String url = "/compensation/" + idEmployee.toString() + "/compenasation";
-        return webClientCompensation.get(8088, "52.23.156.12", url)
+        return webClientCompensation.get(8088, "localhost", url)
                 .send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
@@ -312,7 +312,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
     // devuelve todos los contratos activos con fecha mas reciente
     private  Uni<List<Long>> listadoDeEmployeeIdMasRecienteActivo(){
-        return webClientContract.get(8087, "52.23.156.12", "/contract/listadoDeEmployeeIdMasRecienteActivo").send()
+        return webClientContract.get(8087, "localhost", "/contract/listadoDeEmployeeIdMasRecienteActivo").send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     List<Long> lista = new ArrayList<>();
@@ -353,7 +353,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
     // CAMBIAR A PRIVADO
     public Uni<Contract> datosParaEmpleadosActivosPorManager(Long employeeId) {
         String url= "/contract/"+employeeId+"/datosParaEmpleadosActivosPorManager";
-        return webClientContract.get(8087, "52.23.156.12",url ).send()
+        return webClientContract.get(8087, "localhost",url ).send()
                 .onFailure().invoke(res -> log.error("Error al recuperar los contract ", res))
                 .onItem().transform(res -> {
                    // List<Contract> lista = new ArrayList<>();
@@ -376,7 +376,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
     public Uni<List<Contract>> datosParaEmpleadosActivosPorManager2() {
         String url= "/contract/datosParaEmpleadosActivosPorManager2";
-        return webClientContract.get(8087, "52.23.156.12",url ).send()
+        return webClientContract.get(8087, "localhost",url ).send()
                 .onFailure().invoke(res -> log.error("Error al recuperar los contract ", res))
                 .onItem().transform(res -> {
                     List<Contract> lista = new ArrayList<>();
@@ -400,7 +400,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 // CAMBIAR A PRIVADO
     public Uni<Compensation> datosDeCompensacionesParaEmpleadosActivosPorManager(Long homeCNUM) {
         String url= "/compensation/"+homeCNUM+"/datosDeCompensacionesParaEmpleadosActivosPorManager";
-        return webClientCompensation.get(8088, "52.23.156.12",url ).send()
+        return webClientCompensation.get(8088, "localhost",url ).send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     Compensation com = null;
@@ -435,7 +435,7 @@ public class Repositorio implements PanacheRepositoryBase<Employee,Long> {
 
     public Uni<List<Compensation>> datosDeCompensacionesParaEmpleadosActivosPorManager2() {
         String url= "/compensation/datosDeCompensacionesParaEmpleadosActivosPorManager2";
-        return webClientCompensation.get(8088, "52.23.156.12",url ).send()
+        return webClientCompensation.get(8088, "localhost",url ).send()
                 .onFailure().invoke(res -> log.error("Error recuperando productos ", res))
                 .onItem().transform(res -> {
                     //Compensation com = null;
